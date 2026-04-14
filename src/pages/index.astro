@@ -118,12 +118,24 @@ const images = Object.entries(imageModules)
     }
 
     /* ── Sections ── */
+
+    /* No-JS fallback: all sections visible so Kindle users can scroll through */
     section {
+      display: block;
+    }
+
+    /* When JS is active, only show the .active section */
+    body.js-tabs section {
       display: none;
     }
 
-    section.active {
+    body.js-tabs section.active {
       display: block;
+    }
+
+    /* ── Home ── */
+    #home {
+      padding: 0 16px;
     }
 
     /* ── Love Note ── */
@@ -330,7 +342,7 @@ const images = Object.entries(imageModules)
     This Kindle is yours now.<br>
     Fill it with worlds, words, and wanderings.<br><br>
     I hope every page you turn feels like home,<br>
-    every word you read feels like sweet like honey,
+    every word you read feels sweet as honey,
     and every story you enjoy remind you how much I love you.
   </p>
   <p class="note-footer">with love ♡</p>
@@ -450,6 +462,9 @@ const images = Object.entries(imageModules)
   lightbox.addEventListener('click', () => {
     lightbox.classList.remove('open');
   });
+
+  // Enable JS-driven tab mode
+  document.body.classList.add('js-tabs');
 
   document.querySelectorAll('nav a').forEach((link) => {
     link.addEventListener('click', (e) => {
