@@ -1,17 +1,4 @@
 ---
-import { Image } from 'astro:assets';
-
-const imageModules = import.meta.glob<{ default: ImageMetadata }>(
-  '../assets/img/img_*.jpeg',
-  { eager: true }
-);
-
-const images = Object.entries(imageModules)
-  .map(([path, mod]) => {
-    const num = parseInt(path.match(/img_(\d+)\.jpeg/)![1]);
-    return { num, image: mod.default };
-  })
-  .sort((a, b) => a.num - b.num);
 ---
 
 <html lang="en">
@@ -267,48 +254,6 @@ const images = Object.entries(imageModules)
       text-align: center;
     }
 
-    /* ── Gallery ── */
-    .gallery {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .gallery img {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      display: block;
-      cursor: pointer;
-    }
-
-    .gallery img:first-child {
-      grid-column: 1 / -1;
-      aspect-ratio: 4 / 3;
-    }
-
-    .lightbox {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.92);
-      z-index: 100;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .lightbox.open {
-      display: flex;
-    }
-
-    .lightbox img {
-      max-width: 92vw;
-      max-height: 92vh;
-      object-fit: contain;
-    }
-
     /* ── Page Footer ── */
     footer {
       text-align: center;
@@ -328,7 +273,6 @@ const images = Object.entries(imageModules)
 <nav>
   <a href="#" data-tab="home" class="current">Home</a>
   <a href="#" data-tab="list">Reading list</a>
-  <a href="#" data-tab="gallery">Gallery</a>
   <a href="#" data-tab="quote">Quote</a>
   <a href="#" data-tab="secret">✦</a>
 </nav>
@@ -377,16 +321,6 @@ const images = Object.entries(imageModules)
 
 </section>
 
-<!-- GALLERY -->
-<section id="gallery">
-  <p class="label">MOMENTS</p>
-  <div class="gallery">
-    {images.map(({ image }, index) => (
-      <Image src={image} alt="" width={560} height={index === 0 ? 560 * 4 / 3 : 560} quality={60} loading="lazy" />
-    ))}
-  </div>
-</section>
-
 <!-- QUOTE -->
 <section id="quote">
   <p class="label">Today's quote</p>
@@ -410,10 +344,6 @@ const images = Object.entries(imageModules)
   </p>
   <p class="secret-footer">— yours, always ♡</p>
 </section>
-
-<div class="lightbox" id="lightbox">
-  <img id="lightbox-img" src="" alt="" />
-</div>
 
 <footer>bae.condro.me &nbsp;·&nbsp; made with love</footer>
 
@@ -447,20 +377,6 @@ const images = Object.entries(imageModules)
     qi = (qi + 1) % quotes.length;
     document.getElementById('q-text')!.textContent = quotes[qi].t;
     document.getElementById('q-src')!.textContent = quotes[qi].s;
-  });
-
-  const lightbox = document.getElementById('lightbox')!;
-  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
-
-  document.querySelectorAll('.gallery img').forEach((img) => {
-    img.addEventListener('click', () => {
-      lightboxImg.src = (img as HTMLImageElement).src;
-      lightbox.classList.add('open');
-    });
-  });
-
-  lightbox.addEventListener('click', () => {
-    lightbox.classList.remove('open');
   });
 
   // Enable JS-driven tab mode
